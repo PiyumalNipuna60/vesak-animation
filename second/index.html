@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Firework Simulator v2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#000000">
+
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="https://public.codepenassets.com/css/normalize-5.0.0.min.css">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --on: 0;
+      --bg: hsl(calc(200 - (var(--on) * 160)), calc((20 + (var(--on) * 50)) * 1%), calc((20 + (var(--on) * 60)) * 1%));
+      --cord: hsl(0, 0%, calc((60 - (var(--on) * 50)) * 1%));
+      --stroke: hsl(0, 0%, calc((60 - (var(--on) * 50)) * 1%));
+      --shine: hsla(0, 0%, 100%, calc(0.75 - (var(--on) * 0.5)));
+      --cap: hsl(0, 0%, calc((40 + (var(--on) * 30)) * 1%));
+      --filament: hsl(45, calc(var(--on) * 80%), calc((25 + (var(--on) * 75)) * 1%));
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--bg);
+    }
+
+    .toggle-scene {
+      overflow: visible !important;
+      height: 50vmin;
+      position: absolute;
+      top: 50%;
+      z-index: 99;
+    }
+
+    .toggle-scene__cord {
+      stroke: var(--cord);
+      cursor: move;
+    }
+
+    .toggle-scene__cord:nth-of-type(1) {
+      display: none;
+    }
+
+    .toggle-scene__cord:nth-of-type(2),
+    .toggle-scene__cord:nth-of-type(3),
+    .toggle-scene__cord:nth-of-type(4),
+    .toggle-scene__cord:nth-of-type(5) {
+      display: none;
+    }
+
+    .toggle-scene__cord-end {
+      stroke: var(--cord);
+      fill: var(--cord);
+    }
+
+    .toggle-scene__dummy-cord {
+      stroke-width: 6;
+      stroke: var(--cord);
+    }
+
+    .bulb__filament {
+      stroke: var(--filament);
+    }
+
+    .bulb__shine {
+      stroke: var(--shine);
+    }
+
+    .bulb__flash {
+      stroke: #f5e0a3;
+      display: none;
+    }
+
+    .bulb__bulb {
+      stroke: var(--stroke);
+      fill: hsla(calc(180 - (95 * var(--on))), 80%, 80%, calc(0.1 + (0.4 * var(--on))));
+    }
+
+    .bulb__cap {
+      fill: var(--cap);
+    }
+
+    .bulb__cap-shine {
+      fill: var(--shine);
+    }
+
+    .bulb__cap-outline {
+      stroke: var(--stroke);
+    }
+
+    .nextBtn {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      font-family: sans-serif;
+      text-align: center;
+      animation: pulse 2s infinite;
+      cursor: pointer;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 1.2rem;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: translateX(-50%) scale(1.05);
+        opacity: 0.8;
+      }
+
+      100% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+      }
+    }
+
+    .nextBtn:hover {
+      animation: none;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    @media only screen and (max-width: 1300px) {
+      .toggle-scene {
+        top: 60%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- partial:index.partial.html -->
+  <!-- SVG Spritesheet -->
+  <div style="height: 0; width: 0; position: absolute; visibility: hidden;">
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <symbol id="icon-play" viewBox="0 0 24 24">
+        <path d="M8 5v14l11-7z" />
+      </symbol>
+      <symbol id="icon-pause" viewBox="0 0 24 24">
+        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+      </symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24">
+        <path
+          d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+      </symbol>
+      <symbol id="icon-settings" viewBox="0 0 24 24">
+        <path
+          d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
+      </symbol>
+      <symbol id="icon-sound-on" viewBox="0 0 24 24">
+        <path
+          d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
+      </symbol>
+      <symbol id="icon-sound-off" viewBox="0 0 24 24">
+        <path
+          d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
+      </symbol>
+    </svg>
+  </div>
+
+
+  <!-- App -->
+  <div class="container">
+    <div class="loading-init">
+      <div class="loading-init__header">Loading</div>
+      <div class="loading-init__status">Online Wesak</div>
+    </div>
+    <div class="stage-container remove">
+      <div class="canvas-container">
+        <canvas id="trails-canvas"></canvas>
+        <canvas id="main-canvas"></canvas>
+      </div>
+      <div class="controls">
+        <div class="btn pause-btn">
+          <svg fill="white" width="24" height="24">
+            <use href="#icon-pause" xlink:href="#icon-pause"></use>
+          </svg>
+        </div>
+        <div class="btn sound-btn">
+          <svg fill="white" width="24" height="24">
+            <use href="#icon-sound-off" xlink:href="#icon-sound-off"></use>
+          </svg>
+        </div>
+        <div class="btn settings-btn">
+          <svg fill="white" width="24" height="24">
+            <use href="#icon-settings" xlink:href="#icon-settings"></use>
+          </svg>
+        </div>
+      </div>
+      <div class="menu hide">
+        <div class="menu__inner-wrap">
+          <div class="btn btn--bright close-menu-btn">
+            <svg fill="white" width="24" height="24">
+              <use href="#icon-close" xlink:href="#icon-close"></use>
+            </svg>
+          </div>
+          <div class="menu__header">Settings</div>
+          <div class="menu__subheader">For more info, click any label.</div>
+          <form>
+            <div class="form-option form-option--select">
+              <label class="shell-type-label">Shell Type</label>
+              <select class="shell-type"></select>
+            </div>
+            <div class="form-option form-option--select">
+              <label class="shell-size-label">Shell Size</label>
+              <select class="shell-size"></select>
+            </div>
+            <div class="form-option form-option--select">
+              <label class="quality-ui-label">Quality</label>
+              <select class="quality-ui"></select>
+            </div>
+            <div class="form-option form-option--select">
+              <label class="sky-lighting-label">Sky Lighting</label>
+              <select class="sky-lighting"></select>
+            </div>
+            <div class="form-option form-option--select">
+              <label class="scaleFactor-label">Scale</label>
+              <select class="scaleFactor"></select>
+            </div>
+            <div class="form-option form-option--checkbox">
+              <label class="auto-launch-label">Auto Fire</label>
+              <input class="auto-launch" type="checkbox" />
+            </div>
+            <div class="form-option form-option--checkbox form-option--finale-mode">
+              <label class="finale-mode-label">Finale Mode</label>
+              <input class="finale-mode" type="checkbox" />
+            </div>
+            <div class="form-option form-option--checkbox">
+              <label class="hide-controls-label">Hide Controls</label>
+              <input class="hide-controls" type="checkbox" />
+            </div>
+            <div class="form-option form-option--checkbox form-option--fullscreen">
+              <label class="fullscreen-label">Fullscreen</label>
+              <input class="fullscreen" type="checkbox" />
+            </div>
+            <div class="form-option form-option--checkbox">
+              <label class="long-exposure-label">Open Shutter</label>
+              <input class="long-exposure" type="checkbox" />
+            </div>
+          </form>
+          <div class="credits">
+            Passionately built by <a href="https://cmiller.tech/" target="_blank">Caleb Miller</a>.
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="help-modal">
+      <div class="help-modal__overlay"></div>
+      <div class="help-modal__dialog">
+        <div class="help-modal__header"></div>
+        <div class="help-modal__body"></div>
+        <button type="button" class="help-modal__close-btn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <svg class="toggle-scene rem" xmlns="http://www.w3.org/2000/svg" preserveaspectratio="xMinYMin"
+    viewBox="0 0 197.451 481.081">
+    <defs>
+      <marker id="e" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666"
+          d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="d" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666"
+          d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="c" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666"
+          d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="b" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666"
+          d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <marker id="a" orient="auto" overflow="visible" refx="0" refy="0">
+        <path class="toggle-scene__cord-end" fill-rule="evenodd" stroke-width=".2666"
+          d="M.98 0a1 1 0 11-2 0 1 1 0 012 0z"></path>
+      </marker>
+      <clippath id="g" clippathunits="userSpaceOnUse">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="4.677"
+          d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v53.6s-8.825 16-29.203 16c-21.674 0-29.203-16-29.203-16z">
+        </path>
+      </clippath>
+      <clippath id="f" clippathunits="userSpaceOnUse">
+        <path
+          d="M-868.418 945.051c-4.188 73.011 78.255 53.244 150.216 52.941 82.387-.346 98.921-19.444 98.921-47.058 0-27.615-4.788-42.55-73.823-42.55-69.036 0-171.436-30.937-175.314 36.667z">
+        </path>
+      </clippath>
+    </defs>
+    <g class="toggle-scene__cords">
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6"
+        d="M123.228-28.56v150.493" transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6"
+        d="M123.228-28.59s28 8.131 28 19.506-18.667 13.005-28 19.507c-9.333 6.502-28 8.131-28 19.506s28 19.507 28 19.507"
+        transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6"
+        d="M123.228-28.575s-20 16.871-20 28.468c0 11.597 13.333 18.978 20 28.468 6.667 9.489 20 16.87 20 28.467 0 11.597-20 28.468-20 28.468"
+        transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6"
+        d="M123.228-28.569s16 20.623 16 32.782c0 12.16-10.667 21.855-16 32.782-5.333 10.928-16 20.623-16 32.782 0 12.16 16 32.782 16 32.782"
+        transform="translate(-24.503 256.106)"></path>
+      <path class="toggle-scene__cord" marker-end="url(#a)" fill="none" stroke-linecap="square" stroke-width="6"
+        d="M123.228-28.563s-10 24.647-10 37.623c0 12.977 6.667 25.082 10 37.623 3.333 12.541 10 24.647 10 37.623 0 12.977-10 37.623-10 37.623"
+        transform="translate(-24.503 256.106)"></path>
+      <g class="line toggle-scene__dummy-cord">
+        <line marker-end="url(#a)" x1="98.7255" x2="98.7255" y1="240.5405" y2="380.5405"></line>
+      </g>
+      <circle class="toggle-scene__hit-spot" cx="98.7255" cy="380.5405" r="60" fill="transparent"></circle>
+    </g>
+    <g class="toggle-scene__bulb bulb" id="bulb" transform="translate(844.069 -645.213)">
+      <path class="bulb__cap" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.677"
+        d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v53.6s-8.825 16-29.203 16c-21.674 0-29.203-16-29.203-16z">
+      </path>
+      <path class="bulb__cap-shine" d="M-778.379 802.873h25.512v118.409h-25.512z" clip-path="url(#g)"
+        transform="matrix(.52452 0 0 .90177 -368.282 82.976)"></path>
+      <path class="bulb__cap" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"
+        d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v0s-8.439 10.115-28.817 10.115c-21.673 0-29.59-10.115-29.59-10.115z">
+      </path>
+      <path class="bulb__cap-outline" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4.677"
+        d="M-774.546 827.629s12.917-13.473 29.203-13.412c16.53.062 29.203 13.412 29.203 13.412v53.6s-8.825 16-29.203 16c-21.674 0-29.203-16-29.203-16z">
+      </path>
+      <g class="bulb__filament" fill="none" stroke-linecap="round" stroke-width="5">
+        <path d="M-752.914 823.875l-8.858-33.06"></path>
+        <path d="M-737.772 823.875l8.858-33.06"></path>
+      </g>
+      <path class="bulb__bulb" stroke-linecap="round" stroke-width="5"
+        d="M-783.192 803.855c5.251 8.815 5.295 21.32 13.272 27.774 12.299 8.045 36.46 8.115 49.127 0 7.976-6.454 8.022-18.96 13.273-27.774 3.992-6.7 14.408-19.811 14.408-19.811 8.276-11.539 12.769-24.594 12.769-38.699 0-35.898-29.102-65-65-65-35.899 0-65 29.102-65 65 0 13.667 4.217 26.348 12.405 38.2 0 0 10.754 13.61 14.746 20.31z">
+      </path>
+      <circle class="bulb__flash" cx="-745.343" cy="743.939" r="83.725" fill="none" stroke-dasharray="10,30"
+        stroke-linecap="round" stroke-linejoin="round" stroke-width="10"></circle>
+      <path class="bulb__shine" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="12"
+        d="M-789.19 757.501a45.897 45.897 0 013.915-36.189 45.897 45.897 0 0129.031-21.957"></path>
+    </g>
+  </svg>
+  <div class="nextBtn">pull down the rope and light up the digital Thorana</div>
+  <!-- partial -->
+  <!-- Load GSAP core first -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <!-- Then load plugins -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/MorphSVGPlugin.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/Draggable.min.js"></script>
+
+  <!-- Then load other dependencies -->
+  <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/fscreen%401.0.1.js'></script>
+  <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/Stage%400.1.4.js'></script>
+  <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/329180/MyMath.js'></script>
+  <script src="./script.js"></script>
+  <script>
+    // Wait for everything to load
+    document.addEventListener('DOMContentLoaded', function () {
+      const {
+        gsap: { registerPlugin, set, to, timeline },
+        MorphSVGPlugin,
+        Draggable
+      } = window;
+
+      // Register plugins
+      registerPlugin(MorphSVGPlugin, Draggable);
+
+      // Rest of your code...
+      const AUDIO = {
+        CLICK: new Audio('https://assets.codepen.io/605876/click.mp3')
+      };
+
+      const STATE = {
+        ON: false
+      };
+
+      const CORD_DURATION = 0.1;
+
+      const CORDS = document.querySelectorAll('.toggle-scene__cord');
+      const HIT = document.querySelector('.toggle-scene__hit-spot');
+      const DUMMY = document.querySelector('.toggle-scene__dummy-cord');
+      const DUMMY_CORD = document.querySelector('.toggle-scene__dummy-cord line');
+      const PROXY = document.createElement('div');
+      // set init position
+      const ENDX = DUMMY_CORD.getAttribute('x2');
+      const ENDY = DUMMY_CORD.getAttribute('y2');
+      const RESET = () => {
+        set(PROXY, {
+          x: ENDX,
+          y: ENDY
+        });
+
+      };
+
+      RESET();
+
+      const CORD_TL = timeline({
+        paused: true,
+        onStart: () => {
+          STATE.ON = !STATE.ON;
+          set(document.documentElement, { '--on': STATE.ON ? 1 : 0 });
+          set([DUMMY, HIT], { display: 'none' });
+          set(CORDS[0], { display: 'block' });
+          AUDIO.CLICK.play();
+        },
+        onComplete: () => {
+          set([DUMMY, HIT], { display: 'block' });
+          set(CORDS[0], { display: 'none' });
+          RESET();
+          window.location.href = '../therd/index.html';
+          console.log("hy");
+        }
+      });
+
+
+      for (let i = 1; i < CORDS.length; i++) {
+        CORD_TL.add(
+          to(CORDS[0], {
+            morphSVG: CORDS[i],
+            duration: CORD_DURATION,
+            repeat: 1,
+            yoyo: true
+          }));
+
+
+      }
+
+      Draggable.create(PROXY, {
+        trigger: HIT,
+        type: 'x,y',
+        onPress: e => {
+          startX = e.x;
+          startY = e.y;
+        },
+        onDrag: function () {
+          set(DUMMY_CORD, {
+            attr: {
+              x2: this.x,
+              y2: this.y
+            }
+          });
+
+
+        },
+        onRelease: function (e) {
+          const DISTX = Math.abs(e.x - startX);
+          const DISTY = Math.abs(e.y - startY);
+          const TRAVELLED = Math.sqrt(DISTX * DISTX + DISTY * DISTY);
+          to(DUMMY_CORD, {
+            attr: { x2: ENDX, y2: ENDY },
+            duration: CORD_DURATION,
+            onComplete: () => {
+              if (TRAVELLED > 50) {
+                CORD_TL.restart();
+              } else {
+                RESET();
+              }
+            }
+          });
+
+        }
+      });
+    });
+  </script>
+</body>
+
+</html>

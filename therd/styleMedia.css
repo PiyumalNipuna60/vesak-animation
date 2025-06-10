@@ -1,0 +1,419 @@
+@media only screen and (max-width: 1300px) {
+  .base-2 {
+    position: fixed;
+    top: 13%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 85%;
+    height: 160%;
+    background: transparent;
+    animation: rotate2 100s linear infinite, changeColors 2s infinite alternate;
+
+    /* Create octagon shape */
+    clip-path: polygon(
+      30% 0%,
+      /* top left */ 70% 0%,
+      /* top right */ 100% 30%,
+      /* right top */ 100% 70%,
+      /* right bottom */ 70% 100%,
+      /* bottom right */ 30% 100%,
+      /* bottom left */ 0% 70%,
+      /* left bottom */ 0% 30% /* left top */
+    );
+
+    /* Dotted background */
+    background-image: radial-gradient(
+      circle at center,
+      currentColor 2px,
+      transparent 2px
+    );
+    background-size: 20px 20px;
+
+    /* Vesak-themed border */
+    border: 4px solid transparent;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+
+  /* Position classes */
+  .top-right {
+    top: 8%;
+    right: 30%;
+    transform: translateX(10%);
+  }
+
+  .top-left {
+    top: 8%;
+    left: 28%;
+    transform: translateX(10%);
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .base-2 {
+    position: fixed;
+    top: 18%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 90%;
+    height: 160%;
+    background: transparent;
+    animation: rotate2 100s linear infinite, changeColors 2s infinite alternate;
+
+    /* Create octagon shape */
+    clip-path: polygon(
+      30% 0%,
+      /* top left */ 70% 0%,
+      /* top right */ 100% 30%,
+      /* right top */ 100% 70%,
+      /* right bottom */ 70% 100%,
+      /* bottom right */ 30% 100%,
+      /* bottom left */ 0% 70%,
+      /* left bottom */ 0% 30% /* left top */
+    );
+
+    /* Dotted background */
+    background-image: radial-gradient(
+      circle at center,
+      currentColor 2px,
+      transparent 2px
+    );
+    background-size: 20px 20px;
+
+    /* Vesak-themed border */
+    border: 4px solid transparent;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+}
+
+@media only screen and (max-width: 1000px) {
+  .surrounding-circle,
+  .surrounding-circle2 {
+    position: absolute;
+    width: 16%;
+    height: 26%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  /* Position classes */
+  .top {
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .top-right {
+    top: 16%;
+    right: 26%;
+    transform: translateX(10%);
+  }
+
+  .right {
+    top: 55%;
+    right: 15%;
+    transform: translateY(-50%);
+  }
+
+  .bottom-right {
+    bottom: 5%;
+    right: 18%;
+    transform: translateX(10%);
+  }
+
+  .bottom-left {
+    bottom: 5%;
+    left: 15%;
+    transform: translateX(10%);
+  }
+
+  .left {
+    top: 55%;
+    left: 15%;
+    transform: translateY(-50%);
+  }
+
+  .top-left {
+    top: 18%;
+    left: 23%;
+    transform: translateX(10%);
+  }
+
+  .base-2 {
+    position: fixed;
+    top: 18%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 100%;
+    height: 155%;
+    background: transparent;
+    animation: rotate2 100s linear infinite, changeColors 2s infinite alternate;
+
+    /* Create octagon shape */
+    clip-path: polygon(
+      30% 0%,
+      /* top left */ 70% 0%,
+      /* top right */ 100% 30%,
+      /* right top */ 100% 70%,
+      /* right bottom */ 70% 100%,
+      /* bottom right */ 30% 100%,
+      /* bottom left */ 0% 70%,
+      /* left bottom */ 0% 30% /* left top */
+    );
+
+    /* Dotted background */
+    background-image: radial-gradient(
+      circle at center,
+      currentColor 2px,
+      transparent 2px
+    );
+    background-size: 20px 20px;
+
+    /* Vesak-themed border */
+    border: 4px solid transparent;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .surrounding-circle,
+  .surrounding-circle2 {
+    width: 21%;
+    height: 19%;
+  }
+
+  /* Position classes */
+  .top {
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .top-right {
+    top: 24%;
+    right: 18%;
+    transform: translateX(10%);
+  }
+
+  .right {
+    top: 55%;
+    right: 8%;
+    transform: translateY(-50%);
+  }
+
+  .bottom-right {
+    bottom: 15%;
+    right: 18%;
+    transform: translateX(10%);
+  }
+
+  .bottom-left {
+    bottom: 15%;
+    left: 15%;
+    transform: translateX(10%);
+  }
+
+  .left {
+    top: 55%;
+    left: 8%;
+    transform: translateY(-50%);
+  }
+
+  .top-left {
+    top: 24%;
+    left: 16%;
+    transform: translateX(10%);
+  }
+
+  .base {
+    top: 18%;
+  }
+
+  .base-2 {
+    position: fixed;
+    top: 5%;
+    left: -25%;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 150%;
+    height: 130%;
+  }
+}
+
+@media only screen and (max-width: 856px) {
+  .surrounding-circle,
+  .surrounding-circle2 {
+    width: 22%;
+    height: 17%;
+  }
+
+  .base-2 {
+    position: fixed;
+    top: 5%;
+    left: -26%;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 150%;
+    height: 120%;
+  }
+
+   .left {
+    top: 55%;
+    left: 4%;
+    transform: translateY(-50%);
+  }
+
+  .right {
+    top: 55%;
+    right: 4%;
+    transform: translateY(-50%);
+  }
+
+    .top-left {
+    top: 26%;
+    left: 14%;
+    transform: translateX(10%);
+  }
+
+    .top-right {
+    top: 26%;
+    right: 15%;
+    transform: translateX(10%);
+  }
+
+}
+
+@media only screen and (max-width: 800px) {
+  .surrounding-circle,
+  .surrounding-circle2 {
+        width: 21%;
+    height: 18%;
+  }
+
+
+  .base-2 {
+    position: fixed;
+    top: 15%;
+    left: -25%;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 150%;
+    height: 120%;
+  }
+}
+
+
+
+@media only screen and (max-width: 480px) {
+  body {
+    margin-top: 36%;
+  }
+
+  .base {
+    transform: scale(0.4);
+    width: auto;
+  }
+
+  .surrounding-circle,
+  .surrounding-circle2 {
+    width: 24%;
+    height: 14%;
+  }
+
+  .img::after {
+    bottom: 5rem;
+  }
+
+  .img img {
+    transform: scale(0.3);
+    margin: 8rem 0 0 0.2rem;
+  }
+
+  /* Position classes */
+  .top {
+    top: 2%;
+    left: 49%;
+    transform: translateX(-50%);
+  }
+
+  .top-right {
+    top: 10%;
+    right: 17%;
+    transform: translateX(10%);
+  }
+
+  .right {
+    top: 32%;
+    right: -1%;
+    transform: translateY(-50%);
+  }
+
+  .bottom-right {
+    top: 25%;
+    right: 28%;
+    transform: translateX(10%);
+  }
+
+  .bottom-left {
+    top: 25%;
+    left: 22%;
+    transform: translateX(10%);
+  }
+
+  .left {
+    top: 32%;
+    left: -1%;
+    transform: translateY(-50%);
+  }
+
+  .top-left {
+    top: 10%;
+    left: 11%;
+    transform: translateX(10%);
+  }
+
+  .base-2 {
+    position: fixed;
+    top: -20%;
+    left: -55%;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 200%;
+    height: 100%;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  .surrounding-circle,
+  .surrounding-circle2 {
+    width: 26%;
+    height: 15%;
+  }
+}
+
+@media only screen and (max-width: 376px) {
+  .surrounding-circle,
+  .surrounding-circle2 {
+    width: 25%;
+    height: 15%;
+  }
+}
+
+@media only screen and (max-width: 361px) {
+  .surrounding-circle,
+  .surrounding-circle2 {
+    width: 26%;
+    height: 14%;
+  }
+}

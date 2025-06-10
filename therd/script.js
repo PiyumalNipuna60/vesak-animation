@@ -13,3 +13,10 @@
    light.style.animationDelay = (i * 0.1) + 's';
    thorana.appendChild(light);
  }
+
+ onload = () => {
+  const c = setTimeout(() => {
+    document.body.classList.remove("not-loaded");
+    clearTimeout(c);
+  }, 1000);
+};

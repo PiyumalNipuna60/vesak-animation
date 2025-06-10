@@ -24,6 +24,149 @@ body {
   margin: auto;
 }
 
+.base-2 {
+  position: fixed;
+  top: 18%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  width: 75%;
+  height: 160%;
+  background: transparent;
+  animation: rotate2 100s linear infinite, changeColors 2s infinite alternate;
+
+  /* Create octagon shape */
+  clip-path: polygon(
+    30% 0%,
+    /* top left */ 70% 0%,
+    /* top right */ 100% 30%,
+    /* right top */ 100% 70%,
+    /* right bottom */ 70% 100%,
+    /* bottom right */ 30% 100%,
+    /* bottom left */ 0% 70%,
+    /* left bottom */ 0% 30% /* left top */
+  );
+
+  /* Dotted background */
+  background-image: radial-gradient(
+    circle at center,
+    currentColor 2px,
+    transparent 2px
+  );
+  background-size: 20px 20px;
+
+  /* Vesak-themed border */
+  border: 4px solid transparent;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+@keyframes rotate2 {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes changeColors {
+  0% {
+    color: rgba(248, 54, 54, 0.7);
+  }
+  14% {
+    color: rgba(224, 106, 8, 0.7);
+  }
+  28% {
+    color: rgba(196, 196, 5, 0.7);
+  }
+  42% {
+    color: rgba(100, 255, 100, 0.7);
+  }
+  56% {
+    color: rgba(100, 200, 255, 0.7);
+  }
+  70% {
+    color: rgba(14, 14, 241, 0.7);
+  }
+  84% {
+    color: rgba(200, 100, 255, 0.7);
+  }
+  100% {
+    color: rgba(230, 18, 155, 0.7);
+  }
+}
+
+/* Additional decorative elements */
+.base-2::before {
+  content: "";
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  background: rgba(0, 0, 0, 0.5);
+  clip-path: polygon(
+    30% 0%,
+    70% 0%,
+    100% 30%,
+    100% 70%,
+    70% 100%,
+    30% 100%,
+    0% 70%,
+    0% 30%
+  );
+  animation: rotate2 200s linear infinite reverse;
+
+  /* Dotted pattern for inner layer */
+  background-image: radial-gradient(
+    circle at center,
+    currentColor 1px,
+    transparent 1px
+  );
+  background-size: 15px 15px;
+}
+
+.base-2::after {
+  content: "";
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  right: 20%;
+  bottom: 20%;
+  background: transparent;
+  clip-path: polygon(
+    30% 0%,
+    70% 0%,
+    100% 30%,
+    100% 70%,
+    70% 100%,
+    30% 100%,
+    0% 70%,
+    0% 30%
+  );
+
+  /* More dense dots for innermost layer */
+  background-image: radial-gradient(
+    circle at center,
+    currentColor 1px,
+    transparent 1px
+  );
+  background-size: 10px 10px;
+  animation: changeColors 15s infinite alternate-reverse;
+}
+
+.main {
+  position: absolute;
+  top: 3%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  bottom: 0;
+  padding-top: 3%;
+  background-color: #070606;
+}
+
 @keyframes rotate {
   from {
     transform: scale(0.7) rotate(0deg);
@@ -33,7 +176,95 @@ body {
   }
 }
 
-.surrounding-circle, .surrounding-circle2 {
+@keyframes rotate2 {
+  from {
+    transform: scale(0.7) rotate(0deg);
+  }
+  to {
+    transform: scale(0.7) rotate(-360deg);
+  }
+}
+
+/* Loader Styles */
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .loader {
+            width: 80px;
+            height: 80px;
+            position: relative;
+        }
+        
+        .loader-bulb {
+            width: 60px;
+            height: 60px;
+            background: radial-gradient(circle at 30% 30%, #ffeb3b, #ff9800);
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ffeb3b, 0 0 40px #ff9800;
+            animation: flicker 1.5s infinite alternate;
+        }
+        
+        .loader-base {
+            width: 30px;
+            height: 10px;
+            background: #795548;
+            border-radius: 5px;
+            margin: 0 auto;
+            position: relative;
+            top: -5px;
+        }
+        
+        .loading-text {
+            color: #ffeb3b;
+            margin-top: 20px;
+            font-family: 'Arial', sans-serif;
+            font-size: 18px;
+            text-shadow: 0 0 5px #ff9800;
+        }
+        
+        @keyframes flicker {
+            0%, 100% {
+                opacity: 1;
+                box-shadow: 0 0 20px #ffeb3b, 0 0 40px #ff9800;
+            }
+            25%, 75% {
+                opacity: 0.8;
+                box-shadow: 0 0 15px #ffeb3b, 0 0 30px #ff9800;
+            }
+            50% {
+                opacity: 0.9;
+                box-shadow: 0 0 25px #ffeb3b, 0 0 50px #ff9800;
+            }
+        }
+        
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .main {
+            opacity: 0;
+            transition: opacity 1s ease-in;
+        }
+        
+        .main.loaded {
+            opacity: 1;
+        }
+
+.surrounding-circle,
+.surrounding-circle2 {
   position: absolute;
   width: 180px;
   height: 180px;
@@ -43,10 +274,47 @@ body {
   align-items: center;
 }
 
+.surrounding-circle >h1{
+  position: absolute;
+  color: #f1151e;
+  z-index: 99;
+  top: 0;
+  font-weight: bold;
+  font-size: 2rem;
+  background-color: #cfdacb;
+  border-radius: 50%;
+  width: 2vw;
+  height: 4vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.surrounding-circle2 >h1{
+  position: absolute;
+  color: #f1151e;
+  z-index: 99;
+  top: 0;
+  font-weight: bold;
+  font-size: 2rem;
+  background-color: #cfdacb;
+  border-radius: 50%;
+  width: 2vw;
+  height: 4vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .surrounding-circle {
-  background: 
-    radial-gradient(circle at center, transparent 55px, black 56px),
-    radial-gradient(circle at center, black 48px, transparent 49px, transparent 52px, rgb(11, 11, 11) 53px);
+  background: radial-gradient(circle at center, transparent 55px, black 56px),
+    radial-gradient(
+      circle at center,
+      black 48px,
+      transparent 49px,
+      transparent 52px,
+      rgb(11, 11, 11) 53px
+    );
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
 }
@@ -60,7 +328,7 @@ body {
   background: conic-gradient(
     from 0deg,
     transparent 0deg 180deg,
-    #0012a7 180deg 360deg
+    #a72f00 180deg 360deg
   );
   animation: rotateBorder 8s linear infinite;
   z-index: -1;
@@ -77,11 +345,15 @@ body {
 
 /* ==================================== */
 
-
 .surrounding-circle2 {
-  background: 
-    radial-gradient(circle at center, transparent 55px, black 56px),
-    radial-gradient(circle at center, black 48px, transparent 49px, transparent 52px, rgb(11, 11, 11) 53px);
+  background: radial-gradient(circle at center, transparent 55px, black 56px),
+    radial-gradient(
+      circle at center,
+      black 48px,
+      transparent 49px,
+      transparent 52px,
+      rgb(11, 11, 11) 53px
+    );
   background-clip: padding-box, border-box;
   background-origin: padding-box, border-box;
 }
@@ -101,7 +373,6 @@ body {
   z-index: -1;
 }
 
-
 @keyframes rotateBorder2 {
   0% {
     transform: rotate(0deg);
@@ -111,10 +382,10 @@ body {
   }
 }
 
-
-.surrounding-circle img, .surrounding-circle2 img {
-  width: calc(100% - 20px);
-  height: calc(100% - 20px);
+.surrounding-circle img,
+.surrounding-circle2 img {
+  width: calc(100% - 15px);
+  height: calc(100% - 15px);
   border-radius: 50%;
   object-fit: cover;
   position: relative;
@@ -123,27 +394,27 @@ body {
 
 .topRactangle {
   box-shadow: 0 0 15px 5px rgba(183, 8, 8, 0.7);
-  animation: powerPulse 1s infinite alternate;
+  animation: powerPulse 3s infinite alternate;
 }
 
 @keyframes powerPulse {
   0% {
-    box-shadow: 0 0 15px 5px rgba(183, 8, 8, 0);
+    box-shadow: 0 0 15px 5px rgba(183, 8, 8, 0.1);
   }
   20% {
-    box-shadow: 0 0 5px 2px rgba(183, 8, 8, 0.7);
+    box-shadow: 0 0 5px 2px rgba(183, 8, 154, 0.7);
   }
   40% {
-    box-shadow: 0 0 15px 5px rgba(183, 8, 8, 0.3);
+    box-shadow: 0 0 15px 5px rgba(14, 183, 8, 0.3);
   }
   60% {
     box-shadow: 0 0 5px 2px rgba(183, 8, 8, 0.9);
   }
   80% {
-    box-shadow: 0 0 15px 5px rgba(183, 8, 8, 0.5);
+    box-shadow: 0 0 15px 5px rgba(241, 239, 239, 0.3);
   }
   100% {
-    box-shadow: 0 0 5px 2px rgba(183, 8, 8, 0);
+    box-shadow: 0 0 5px 2px rgba(22, 22, 22, 0.1);
   }
 }
 
@@ -156,7 +427,7 @@ body {
 
 .top-right {
   top: 40px;
-  right: 30%;
+  right: 32%;
   transform: translateX(10%);
 }
 
@@ -192,14 +463,13 @@ body {
 
 .background-pattern {
   position: absolute;
-  width: 950px;
-  height: 950px;
+  width: 800px;
+  height: 800px;
   border-radius: 50%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: 
-    radial-gradient(circle at center, transparent 320px, black 321px),
+  background: radial-gradient(circle at center, transparent 320px, black 321px),
     radial-gradient(circle at center, black 280px, transparent 281px);
   z-index: -1;
 }
@@ -212,8 +482,7 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-image: 
-    radial-gradient(white 2px, transparent 2px),
+  background-image: radial-gradient(white 2px, transparent 2px),
     radial-gradient(white 2px, transparent 2px);
   background-size: 20px 20px;
   background-position: 0 0, 10px 10px;
@@ -5939,25 +6208,26 @@ body {
   }
 }
 
-.img {
+.imgeLoad {
   position: absolute;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
+  top: 15%;
+  left: 0;
+  right: 0;
+  margin: auto;
+  bottom: 0;
 }
-@media only screen and (max-width: 600px) {
-  .img::after {
-    bottom: 4rem;
-  }
-}
-.img img {
+
+.imgeLoad img {
   position: absolute;
   -webkit-user-drag: none;
   transform: scale(0.5);
-  filter: drop-shadow(0px -10px 30px rgba(255, 255, 255, 0.15));
-  -webkit-filter: drop-shadow(0px -10px 30px rgba(255, 255, 255, 0.15));
+  filter: drop-shadow(0px -10px 30px rgba(255, 255, 255, 0.4));
+  -webkit-filter: drop-shadow(0px -10px 30px rgba(255, 255, 255, 0.5));
   opacity: 0;
   margin: 12rem 0 0 0.35rem;
   animation: opacity-anim 0.5s ease forwards 3s;
